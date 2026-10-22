@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Stan konta (czy użytkownik ustawił już własne hasło) – każdy widzi i zmienia tylko swój.
+    match /userState/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+    // Dziennik zmian – zalogowani czytają i dopisują, nikt nie może edytować ani usuwać wpisów.
+    match /audit/{entry} {
+      allow read, create: if request.auth != null;
+      allow update, delete: if false;
+    }
+    // Dane magazynu – tylko dla zalogowanych użytkowników.
+    match /{col}/{docId} {
+      allow read, write: if request.auth != null && col != 'userState' && col != 'audit';
+    }
+  }
+}

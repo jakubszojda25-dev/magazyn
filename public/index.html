@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#5a3c2a">
+<title>Magazyn SAFETY</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+body{margin:0;font:15px/1.45 system-ui,sans-serif}
+[hidden]{display:none!important}
+/* Layout: styl SAFETY Piotr Szojda – brązowy pasek z logo i zakładkami (Stan / Firmy / Historia), jedna kolumna kart, formularze w dolnym panelu. */
+:root{
+  --bg:#faf6f1; --panel:#ffffff; --ink:#3b2a1e; --muted:#7a6453; --line:#e9ddd0;
+  --accent:#9a6233; --accent-ink:#ffffff; --accent-soft:#f1e6d9;
+  --band:#5a3c2a; --band-ink:#f8efe5;
+  --in:#2e7d32; --in-soft:#e3f1e3; --out:#b3261e; --out-soft:#f8e1de; --warn:#8a5a00; --warn-soft:#fbefd2;
+  --f-display:"Barlow Condensed","Arial Narrow","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1d1612; --panel:#261d17; --ink:#f2e8dd; --muted:#bfaa96; --line:#3b2e25;
+  --accent:#d79a62; --accent-ink:#1d1612; --accent-soft:#2e231c;
+  --band:#140f0c; --band-ink:#f2e8dd;
+  --in:#8fd694; --in-soft:#1f2f20; --out:#ff8a7a; --out-soft:#3a201c; --warn:#e6bd5c; --warn-soft:#3a3018; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1d1612; --panel:#261d17; --ink:#f2e8dd; --muted:#bfaa96; --line:#3b2e25;
+  --accent:#d79a62; --accent-ink:#1d1612; --accent-soft:#2e231c;
+  --band:#140f0c; --band-ink:#f2e8dd;
+  --in:#8fd694; --in-soft:#1f2f20; --out:#ff8a7a; --out-soft:#3a201c; --warn:#e6bd5c; --warn-soft:#3a3018; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--band)}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--band);color:var(--band-ink)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px 6px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand .mark{width:42px;height:42px;flex:none;border-radius:50%;background:var(--band-ink);color:var(--band);display:grid;place-items:center}
+.brand .mark svg{width:30px;height:30px}
+.brand b{display:block;font:700 22px/1 var(--f-display);letter-spacing:.06em}
+h1{font:600 15px/1.2 var(--f-body);margin:0;opacity:.85}
+.who{font-size:12px;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right;min-width:0}
+nav{display:flex;gap:4px}
+nav button{flex:1;background:none;border:0;border-bottom:3px solid transparent;padding:10px 6px;font:600 15px var(--f-display);text-transform:uppercase;letter-spacing:.05em;color:var(--band-ink);white-space:nowrap;opacity:.7;cursor:pointer}
+nav button[aria-selected="true"]{opacity:1;border-bottom-color:var(--accent)}
+nav button:focus-visible{outline-color:var(--band-ink)}
+nav .count{font-family:var(--f-mono);font-size:11px;background:var(--accent-soft);color:var(--accent);border-radius:9px;padding:1px 6px;margin-left:4px}
+main{padding-block:16px 24px;display:flex;flex-direction:column;gap:14px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toolbar .grow{flex:1 1 180px;min-width:0}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.btn{font:600 15px var(--f-body);border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;padding:10px 14px;cursor:pointer;white-space:nowrap}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.in{background:var(--in);border-color:var(--in);color:var(--panel)}
+.btn.out{background:var(--out);border-color:var(--out);color:var(--panel)}
+.btn.ghost{background:none;border-color:transparent;color:var(--accent);padding-inline:8px}
+.btn.small{padding:6px 10px;font-size:13px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.list{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.row{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:12px 14px;border-top:1px solid var(--line);align-items:center}
+.row:first-child{border-top:0}
+.row.click{cursor:pointer}
+.row.click:hover{background:var(--accent-soft)}
+.row .name{font-weight:600;min-width:0;overflow-wrap:anywhere}
+.row .sub{grid-column:1/-1;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px;min-width:0}
+.qty{font:600 20px var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+.qty small{font:500 12px var(--f-body);color:var(--muted);margin-left:3px}
+.pill{display:inline-block;font:600 11px var(--f-display);text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:10px}
+.pill.in{background:var(--in-soft);color:var(--in)}.pill.out{background:var(--out-soft);color:var(--out)}
+.pill.adj{background:var(--accent-soft);color:var(--accent)}.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.summary div{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.summary b{display:block;font:600 22px var(--f-mono);font-variant-numeric:tabular-nums}
+.summary span{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.section-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:6px}
+h2{font:700 19px var(--f-display);margin:0;text-transform:uppercase;letter-spacing:.05em}
+h3{font:700 26px/1.1 var(--f-display);margin:0;text-wrap:balance}
+.empty{padding:28px 18px;text-align:center;color:var(--muted)}
+.empty strong{display:block;color:var(--ink);font-family:var(--f-display);font-size:17px;margin-bottom:4px}
+.note{font-size:13px;color:var(--muted)}
+.banner{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:10px 14px;font-size:14px}
+.fab{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:6;box-shadow:0 4px 14px rgba(0,0,0,.25);border-radius:28px;padding:14px 20px}
+.sheet-bg{position:fixed;inset:0;background:rgba(10,14,18,.5);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--panel);width:100%;max-width:520px;max-height:92%;overflow:auto;border-radius:14px 14px 0 0;padding:18px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:12px}
+@media (min-width:640px){.sheet-bg{align-items:center}.sheet{border-radius:12px}}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font:500 11px var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:4px}
+.err{color:var(--out);font-size:13px}
+.confirm-box{background:var(--bg);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.confirm-box .line{display:flex;justify-content:space-between;gap:12px}
+.arow.ok{background:var(--in-soft)}.arow.no{background:var(--out-soft)}
+.aqty{font-size:18px;font-weight:500;margin-top:2px}.aqty small{font:400 12px var(--f-body);color:var(--muted)}
+.ticks{display:flex;gap:8px}
+.tick{width:48px;height:48px;border-radius:50%;border:2px solid var(--line);background:var(--panel);color:var(--muted);display:grid;place-items:center;cursor:pointer;padding:0}
+.tick svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.tick.ok:hover{border-color:var(--in);color:var(--in)}.tick.no:hover{border-color:var(--out);color:var(--out)}
+.tick.ok[aria-pressed="true"]{background:var(--in);border-color:var(--in);color:var(--panel)}
+.tick.no[aria-pressed="true"]{background:var(--out);border-color:var(--out);color:var(--panel)}
+.rowlinks{margin-left:auto;display:flex;gap:14px}
+.linkbtn{background:none;border:0;padding:4px 0;color:var(--accent);font:600 13px var(--f-body);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.tickbar{position:fixed;left:0;right:0;bottom:0;z-index:7;background:var(--band);color:var(--band-ink);padding-block:12px calc(12px + env(safe-area-inset-bottom,0px))}
+.tickbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.tickbar span{font-size:14px;opacity:.9}
+.prow.ok{background:var(--in-soft)}
+.pick-ctl{display:flex;align-items:center;gap:10px}
+.stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;background:var(--panel);overflow:hidden}
+.stepper button{width:38px;height:42px;border:0;background:none;color:var(--ink);font:600 20px var(--f-body);cursor:pointer}
+.stepper input{width:56px;border:0;border-radius:0;text-align:center;padding:8px 2px;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.sub0{font-size:13px;color:var(--muted);font-weight:400;margin-top:2px}
+.pickhead{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+@media (max-width:420px){.stepper button{width:34px}.stepper input{width:46px}}
+.foot{padding-block:8px 120px;text-align:center}.foot .linkbtn{color:var(--muted);font-weight:400;font-size:12px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 84px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;z-index:30;font-size:14px;max-width:90%}
+.back{align-self:flex-start}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:16px;padding:5px 12px;font-size:13px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+@media (max-width:420px){.summary b{font-size:18px}.qty{font-size:18px}}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
+.login{position:fixed;inset:0;z-index:40;background:var(--bg);display:flex;align-items:center;justify-content:center;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.login form{width:100%;max-width:380px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:14px}
+.login .brand{color:var(--ink)}.login .brand .mark{background:var(--band);color:var(--band-ink)}
+.who button{background:none;border:0;color:inherit;font:inherit;text-decoration:underline;cursor:pointer;padding:0;margin-left:6px}
+</style></head><body>
+<div class="login" id="login" hidden><form id="lf" novalidate>
+  <div class="brand"><span class="mark" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 30l9-9c2-2 5-2 7 0l3 3"></path><path d="M44 18l-9 9c-2 2-5 2-7 0l-3-3"></path><path d="M20 21l7-6c2-1.5 4.5-1.3 6 .5"></path><path d="M28 27l-7 6c-2 1.5-4.5 1.3-6-.5"></path><path d="M17 27l3 3M21 23l3 3"></path></svg></span><div><b>SAFETY</b><h1 style="opacity:.8">Magazyn · Piotr Szojda</h1></div></div>
+  <div class="field"><label for="le">E-mail</label><input id="le" type="email" autocomplete="username" required></div>
+  <div class="field"><label for="lp">Hasło</label><input id="lp" type="password" autocomplete="current-password" required></div>
+  <div class="err" id="lerr"></div>
+  <button class="btn primary" id="lgo">Zaloguj</button>
+  <button type="button" class="linkbtn" id="lreset" style="align-self:center">Nie pamiętam hasła</button>
+</form></div>
+<div class="login" id="pwd" hidden><form id="pf" novalidate>
+  <h3>Ustaw własne hasło</h3>
+  <div class="note">Logujesz się po raz pierwszy hasłem, które dostałeś. Ustaw teraz własne hasło, którego będziesz używać na co dzień.</div>
+  <div class="field"><label for="p1">Nowe hasło (min. 8 znaków)</label><input id="p1" type="password" autocomplete="new-password" minlength="8" required></div>
+  <div class="field"><label for="p2">Powtórz nowe hasło</label><input id="p2" type="password" autocomplete="new-password" required></div>
+  <div class="err" id="perr"></div>
+  <button class="btn primary" id="pgo">Zapisz hasło i wejdź</button>
+  <button type="button" class="linkbtn" id="pout" style="align-self:center">Wyloguj</button>
+</form></div>
+
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand"><span class="mark" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 30l9-9c2-2 5-2 7 0l3 3"></path><path d="M44 18l-9 9c-2 2-5 2-7 0l-3-3"></path><path d="M20 21l7-6c2-1.5 4.5-1.3 6 .5"></path><path d="M28 27l-7 6c-2 1.5-4.5 1.3-6-.5"></path><path d="M17 27l3 3M21 23l3 3"></path></svg></span><div style="min-width:0"><b>SAFETY</b><h1>Magazyn · Piotr Szojda</h1></div></div>
+      <div class="who" id="who">Łączenie z bazą…</div>
+    </div>
+    <nav role="tablist">
+      <button role="tab" data-tab="stock" aria-selected="true">Stan</button>
+      <button role="tab" data-tab="pick" aria-selected="false">Do firmy</button>
+      <button role="tab" data-tab="companies" aria-selected="false">Firmy</button>
+      <button role="tab" data-tab="history" aria-selected="false">Historia</button>
+    </nav>
+  </div>
+</header>
+<main class="wrap" id="main">
+  <div class="list"><div class="empty"><strong>Ładowanie magazynu…</strong>Tu pojawią się zapisane rzeczy, ich ilości i rezerwacje dla firm.</div></div>
+</main>
+<footer class="wrap foot" id="foot" hidden><button type="button" class="linkbtn" id="auditBtn">Dziennik zmian</button></footer>
+<button class="btn primary fab" id="fab" hidden>+ Przyjęcie</button>
+<div class="tickbar" id="pickbar" hidden><div class="wrap"><span id="pickinfo"></span><button class="btn in" id="pickgo">Dodaj do wydania</button></div></div>
+<div class="tickbar" id="tickbar" hidden><div class="wrap"><span id="tickinfo"></span><button class="btn in" id="tickgo">Zatwierdź dostawę</button></div></div>
+<div id="sheetRoot"></div>
+
+<script type="module">
+const S={db:null,user:null,uid:null,ro:false,tab:'stock',company:null,pick:{cid:'',sel:{}},q:'',hFilter:'all',
+  products:[],companies:[],allocs:[],history:[],names:{},loaded:{p:0,c:0,a:0,h:0}};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtN=n=>(Math.round(n*100)/100).toLocaleString('pl-PL');
+const fmtD=t=>t?new Date(t).toLocaleString('pl-PL',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+const P=id=>S.products.find(p=>p.id===id);
+const C=id=>S.companies.find(c=>c.id===id);
+const reserved=pid=>S.allocs.filter(a=>a.productId===pid&&a.status==='pending').reduce((s,a)=>s+(+a.qty||0),0);
+function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
+function dbErr(e){if(e&&(e.code==='permission-denied'||e.code==='invalid_argument'))return 'Brak uprawnień. Zaloguj się ponownie.';
+  if(e&&e.code==='quota_exceeded')return 'Baza jest pełna. Usuń stare wpisy, aby dodać nowe.';
+  return 'Nie udało się zapisać. Sprawdź połączenie i spróbuj ponownie.'}
+
+/* ---------- render ---------- */
+function render(){
+  document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===S.tab));
+  const fab=$('#fab');
+  const ticked=(S.tab==='companies'&&S.company&&!S.ro)?S.allocs.filter(a=>a.companyId===S.company&&a.status==='pending'&&a.mark==='ok'):[];
+  $('#tickbar').hidden=!ticked.length;
+  if(ticked.length){const no=S.allocs.filter(a=>a.companyId===S.company&&a.status==='pending'&&a.mark==='no').length;
+    $('#tickinfo').textContent=`Odhaczone: ${ticked.length} ✓`+(no?` · ${no} ✕`:'');$('#tickgo').textContent=`Zatwierdź dostawę (${ticked.length})`}
+  fab.hidden=!S.db||S.ro||S.tab==='history'||S.tab==='pick'||ticked.length>0;
+  updatePickbar();
+  fab.textContent=S.tab==='companies'?(S.company?'+ Przypisz towar':'+ Nowa firma'):'+ Przyjęcie';
+  $('#foot').hidden=!S.db;
+  const m=$('#main');
+  if(!S.db){m.innerHTML=`<div class="list"><div class="empty"><strong>Brak połączenia z bazą</strong>Zaloguj się, żeby zobaczyć stan magazynu.</div></div>`;return}
+  const ro=S.ro?`<div class="banner">Masz dostęp tylko do podglądu. Zmiany może wprowadzać właściciel lub osoby z uprawnieniem do edycji.</div>`:'';
+  m.innerHTML=ro+(S.tab==='stock'?vStock():S.tab==='pick'?vPick():S.tab==='companies'?(S.company&&C(S.company)?vCompany(C(S.company)):vCompanies()):vHistory());
+}
+function vStock(){
+  const q=S.q.trim().toLowerCase();
+  const items=S.products.filter(p=>!q||p.name.toLowerCase().includes(q)).sort((a,b)=>a.name.localeCompare(b.name,'pl'));
+  const tot=S.products.reduce((s,p)=>s+(+p.qty||0),0), res=S.products.reduce((s,p)=>s+reserved(p.id),0);
+  let rows=items.map(p=>{const r=reserved(p.id),av=(+p.qty||0)-r;
+    const who=S.allocs.filter(a=>a.productId===p.id&&a.status==='pending').map(a=>`${esc(C(a.companyId)?.name||'?')} ${fmtN(a.qty)}`).join(', ');
+    return `<div class="row click" data-act="editProduct" data-id="${p.id}">
+      <div class="name">${esc(p.name)}</div><div class="qty">${fmtN(p.qty||0)}<small>${esc(p.unit||'szt.')}</small></div>
+      <div class="sub"><span>Wolne: <b class="mono">${fmtN(av)}</b></span>${r?`<span class="pill ${av<0?'warn':'adj'}">Zarezerw. ${fmtN(r)}</span><span>${who}</span>`:''}${p.note?`<span>${esc(p.note)}</span>`:''}</div></div>`}).join('');
+  if(!S.products.length)rows=`<div class="empty"><strong>Magazyn jest pusty</strong>Kliknij „+ Przyjęcie”, wpisz nazwę rzeczy i ile sztuk przyszło.</div>`;
+  else if(!items.length)rows=`<div class="empty"><strong>Nic nie pasuje do „${esc(S.q)}”</strong>Zmień wyszukiwaną frazę.</div>`;
+  return `<div class="summary"><div><b>${S.products.length}</b><span>Pozycji</span></div><div><b>${fmtN(tot)}</b><span>Sztuk na stanie</span></div><div><b>${fmtN(res)}</b><span>Zarezerwowane</span></div></div>
+  <div class="toolbar"><input class="grow" id="q" type="search" placeholder="Szukaj w magazynie…" value="${esc(S.q)}" aria-label="Szukaj"></div>
+  <div class="list">${rows}</div>`;
+}
+function vPick(){
+  const cs=[...S.companies].sort((a,b)=>a.name.localeCompare(b.name,'pl'));
+  if(S.pick.cid&&!C(S.pick.cid))S.pick.cid='';
+  for(const id in S.pick.sel)if(!P(id))delete S.pick.sel[id];
+  const cid=S.pick.cid;
+  const opts=cs.map(c=>`<option value="${c.id}" ${c.id===cid?'selected':''}>${esc(c.name)}</option>`).join('');
+  const pendN=cid?S.allocs.filter(a=>a.companyId===cid&&a.status==='pending').length:0;
+  const head=`<div class="pickhead"><div class="field"><label for="pc">Dla firmy</label>
+    <div class="toolbar"><select id="pc" class="grow"><option value="">Wybierz firmę…</option>${opts}</select>${S.ro?'':'<button class="btn" data-act="newCompanyPick">+ Nowa firma</button>'}</div></div>
+    ${pendN?`<div class="note">Ta firma ma już ${pendN} poz. do wydania. <button class="linkbtn" data-act="goCompany" data-id="${cid}">Zobacz listę</button></div>`:''}
+    ${!cs.length?'<div class="note">Nie masz jeszcze żadnej firmy. Dodaj pierwszą przyciskiem „+ Nowa firma”.</div>':''}</div>`;
+  const q=S.q.trim().toLowerCase();
+  const items=S.products.filter(p=>!q||p.name.toLowerCase().includes(q)).sort((a,b)=>a.name.localeCompare(b.name,'pl'));
+  let rows=items.map(p=>{const sel=S.pick.sel[p.id];const on=sel!=null;const av=(+p.qty||0)-reserved(p.id);
+    return `<div class="row prow ${on?'ok':''}"><div class="name">${esc(p.name)}<div class="sub0">Na stanie <span class="mono">${fmtN(p.qty||0)}</span> · wolne <span class="mono">${fmtN(av)}</span> ${esc(p.unit||'szt.')}</div></div>
+    <div class="pick-ctl">${on?`<div class="stepper"><button type="button" data-act="pstep" data-id="${p.id}" data-v="-1" aria-label="Mniej">−</button><input id="pq-${p.id}" class="pqty" data-id="${p.id}" inputmode="decimal" value="${sel}" aria-label="Ilość"><button type="button" data-act="pstep" data-id="${p.id}" data-v="1" aria-label="Więcej">+</button></div>`:''}
+    ${S.ro?'':`<button class="tick ok" aria-pressed="${on}" aria-label="Zaznacz ${esc(p.name)}" data-act="ptoggle" data-id="${p.id}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>`}</div>
+    ${on&&sel>av?'<div class="sub"><span class="pill warn">Więcej niż wolne na stanie</span></div>':''}</div>`}).join('');
+  if(!S.products.length)rows=`<div class="empty"><strong>Magazyn jest pusty</strong>Najpierw przyjmij towar w zakładce „Stan”.</div>`;
+  else if(!items.length)rows=`<div class="empty"><strong>Nic nie pasuje do „${esc(S.q)}”</strong>Zmień wyszukiwaną frazę.</div>`;
+  const n=Object.keys(S.pick.sel).length;
+  return head+`<div class="toolbar"><input class="grow" id="q" type="search" placeholder="Szukaj w magazynie…" value="${esc(S.q)}" aria-label="Szukaj">${n?'<button class="btn ghost" data-act="clearPick">Wyczyść</button>':''}</div><div class="list">${rows}</div>`;
+}
+function pToggle(id){const p=P(id);if(!p)return;if(S.pick.sel[id]!=null)delete S.pick.sel[id];else{const av=(+p.qty||0)-reserved(id);S.pick.sel[id]=av>=1||av<=0?1:av}render()}
+function pStep(id,d){const cur=+S.pick.sel[id]||0;S.pick.sel[id]=Math.max(1,Math.round((cur+d)*100)/100);render()}
+function updatePickbar(){const bar=$('#pickbar');const ids=Object.keys(S.pick.sel).filter(id=>S.pick.sel[id]>0);
+  const show=S.tab==='pick'&&!S.ro&&Object.keys(S.pick.sel).length>0;bar.hidden=!show;if(!show)return;
+  const c=C(S.pick.cid);const tot=ids.reduce((s,id)=>s+S.pick.sel[id],0);
+  $('#pickinfo').textContent=`Wybrano ${ids.length} poz. (${fmtN(tot)} szt.)`+(c?` dla: ${c.name}`:'');
+  const b=$('#pickgo');b.disabled=!c||!ids.length;b.textContent=c?'Dodaj do wydania':'Najpierw wybierz firmę'}
+async function submitPick(){const c=C(S.pick.cid);const ids=Object.keys(S.pick.sel).filter(id=>S.pick.sel[id]>0&&P(id));if(!c||!ids.length)return;
+  const b=$('#pickgo');b.disabled=true;
+  try{for(const id of ids){const p=P(id),q=S.pick.sel[id];
+      const ex=S.allocs.find(a=>a.companyId===c.id&&a.productId===id&&a.status==='pending'&&!a.mark);
+      if(ex)await S.db.doc('allocations/'+ex.id).update({qty:(+ex.qty||0)+q});
+      else await S.db.collection('allocations').add({companyId:c.id,productId:id,productName:p.name,qty:q,note:'',status:'pending',mark:null,createdAt:Date.now(),by:S.uid||null})}
+    audit('Przypisanie do firmy',`${c.name}: `+ids.map(id=>`${P(id)?.name} ×${fmtN(S.pick.sel[id])}`).join(', '));S.pick.sel={};S.tab='companies';S.company=c.id;render();scrollTo(0,0);toast(`Dodano ${ids.length} poz. do wydania dla ${c.name}`)}
+  catch(e){b.disabled=false;toast(dbErr(e))}}
+function vCompanies(){
+  const items=[...S.companies].sort((a,b)=>a.name.localeCompare(b.name,'pl'));
+  let rows=items.map(c=>{const pend=S.allocs.filter(a=>a.companyId===c.id&&a.status==='pending');
+    const last=S.history.find(h=>h.companyId===c.id&&h.type==='out');
+    return `<div class="row click" data-act="openCompany" data-id="${c.id}"><div class="name">${esc(c.name)}</div>
+      <div>${pend.length?`<span class="pill out">${pend.length} do wydania</span>`:`<span class="pill adj">Brak oczekujących</span>`}</div>
+      <div class="sub">${c.note?`<span>${esc(c.note)}</span>`:''}${last?`<span>Ostatnie wydanie: ${fmtD(last.at)}</span>`:''}</div></div>`}).join('');
+  if(!items.length)rows=`<div class="empty"><strong>Nie dodano jeszcze żadnej firmy</strong>Kliknij „+ Nowa firma”, a potem przypisz do niej towar z magazynu.</div>`;
+  return `<div class="list">${rows}</div>`;
+}
+function vCompany(c){
+  const pend=S.allocs.filter(a=>a.companyId===c.id&&a.status==='pending').sort((a,b)=>a.createdAt-b.createdAt);
+  const hist=S.history.filter(h=>h.companyId===c.id);
+  const pr=pend.map(a=>{const p=P(a.productId);const mk=a.mark||'';return `<div class="row arow ${mk}">
+    <div class="name">${esc(p?.name||a.productName)}<div class="aqty mono">${fmtN(a.qty)} <small>${esc(p?.unit||'szt.')}</small></div></div>
+    ${S.ro?`<div class="qty">${mk==='ok'?'✓':mk==='no'?'✕':''}</div>`:`<div class="ticks"><button class="tick ok" aria-pressed="${mk==='ok'}" aria-label="Zawiezione" title="Zawiezione" data-act="mark" data-id="${a.id}" data-v="ok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button class="tick no" aria-pressed="${mk==='no'}" aria-label="Nie zawiezione" title="Nie zawiezione" data-act="mark" data-id="${a.id}" data-v="no"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></button></div>`}
+    <div class="sub">${mk==='ok'?'<span class="pill in">Zawiezione · czeka na zatwierdzenie</span>':mk==='no'?'<span class="pill out">Nie zawiezione</span>':''}<span>Przypisano ${fmtD(a.createdAt)}${a.note?' · '+esc(a.note):''}</span>${p&&(+p.qty||0)<a.qty?'<span class="pill warn">Za mało na stanie</span>':''}
+    ${S.ro?'':`<span class="rowlinks"><button class="linkbtn" data-act="deliver" data-id="${a.id}">Wydaj część</button><button class="linkbtn" data-act="removeAlloc" data-id="${a.id}">Usuń</button></span>`}</div></div>`}).join('')
+    ||`<div class="empty"><strong>Nic nie czeka na wydanie</strong>Użyj „+ Przypisz towar”, aby odłożyć rzeczy z magazynu dla tej firmy.</div>`;
+  const hr=hist.map(hRow).join('')||`<div class="empty">Ta firma nic jeszcze nie odebrała.</div>`;
+  return `<button class="btn ghost back" data-act="back">← Wszystkie firmy</button>
+  <div class="section-h"><h3>${esc(c.name)}</h3>${S.ro?'':`<button class="btn ghost small" data-act="editCompany" data-id="${c.id}">Edytuj</button>`}</div>
+  ${c.note?`<div class="note">${esc(c.note)}</div>`:''}
+  <div class="section-h"><h2>Do wydania</h2></div><div class="list">${pr}</div>
+  <div class="section-h"><h2>Odebrane</h2><span class="note">${hist.length} wpisów</span></div><div class="list">${hr}</div>`;
+}
+function hRow(h){
+  const kind={in:['in','Przyjęcie','+'],out:['out','Wydanie','−'],adj:['adj','Korekta','']}[h.type]||['adj',h.type,''];
+  const sign=h.type==='adj'?(h.qty>0?'+':'−'):kind[2];
+  const by='';
+  return `<div class="row"><div class="name">${esc(h.productName)}</div><div class="qty" style="color:var(--${kind[0]==='adj'?'accent':kind[0]})">${sign}${fmtN(Math.abs(h.qty))}</div>
+  <div class="sub"><span class="pill ${kind[0]}">${kind[1]}</span><span>${fmtD(h.at)}</span>${h.companyName?`<span><b>${esc(h.companyName)}</b></span>`:''}${h.note?`<span>${esc(h.note)}</span>`:''}${by}</div></div>`;
+}
+function vHistory(){
+  const f=S.hFilter;const items=S.history.filter(h=>f==='all'||h.type===f);
+  const chips=[['all','Wszystko'],['in','Przyjęcia'],['out','Wydania'],['adj','Korekty']].map(([k,l])=>`<button data-act="hf" data-id="${k}" aria-pressed="${f===k}">${l}</button>`).join('');
+  return `<div class="chips">${chips}</div><div class="list">${items.map(hRow).join('')||`<div class="empty"><strong>Historia jest pusta</strong>Każde przyjęcie, wydanie dla firmy i korekta stanu zapisze się tutaj.</div>`}</div>
+  ${S.history.length>=500?'<div class="note">Pokazano 500 najnowszych wpisów.</div>':''}`;
+}
+
+/* ---------- sheets ---------- */
+function sheet(html,onMount){const r=$('#sheetRoot');r.innerHTML=`<div class="sheet-bg"><form class="sheet" id="sh" novalidate>${html}</form></div>`;
+  r.firstChild.addEventListener('click',e=>{if(e.target===r.firstChild)close()});
+  r.querySelectorAll('[data-close]').forEach(b=>b.onclick=close);onMount&&onMount($('#sh'));const f=$('#sh input,#sh select');f&&f.focus()}
+function close(){$('#sheetRoot').innerHTML=''}
+const busy=(f,on)=>f.querySelectorAll('button').forEach(b=>b.disabled=on);
+const prodOptions=sel=>S.products.slice().sort((a,b)=>a.name.localeCompare(b.name,'pl')).map(p=>`<option value="${p.id}" ${p.id===sel?'selected':''}>${esc(p.name)} (${fmtN(p.qty||0)} ${esc(p.unit||'szt.')})</option>`).join('');
+async function log(e){await S.db.collection('history').add({...e,at:Date.now(),by:S.uid||null})}
+
+function sheetReceive(){
+  sheet(`<h3>Przyjęcie towaru</h3>
+  <div class="field"><label for="rp">Rzecz</label><select id="rp"><option value="__new">+ Nowa pozycja…</option>${prodOptions(S.products.length?'':null)}</select></div>
+  <div class="field" id="rnWrap"><label for="rn">Nazwa nowej pozycji</label><input id="rn" placeholder="np. Router Mikrotik hAP ax²" autocomplete="off"></div>
+  <div class="two"><div class="field"><label for="rq">Ile przyszło</label><input id="rq" type="number" inputmode="decimal" min="0" step="any" placeholder="0"></div>
+  <div class="field" id="ruWrap"><label for="ru">Jednostka</label><input id="ru" value="szt."></div></div>
+  <div class="field"><label for="rt">Co przyszło / od kogo (opcjonalnie)</label><input id="rt" placeholder="np. dostawa od hurtowni, faktura 123/10"></div>
+  <div class="err" id="re"></div>
+  <div class="actions"><button type="button" class="btn" data-close>Anuluj</button><button class="btn in">Zapisz przyjęcie</button></div>`,f=>{
+    const sync=()=>{const n=$('#rp').value==='__new';$('#rnWrap').hidden=!n;$('#ruWrap').hidden=!n};$('#rp').onchange=sync;
+    if(S.products.length)$('#rp').value='__new';sync();
+    f.onsubmit=async e=>{e.preventDefault();const pid=$('#rp').value,q=parseFloat($('#rq').value),note=$('#rt').value.trim();
+      if(pid==='__new'&&!$('#rn').value.trim())return $('#re').textContent='Wpisz nazwę nowej pozycji.';
+      if(!(q>0))return $('#re').textContent='Podaj ilość większą od zera.';
+      busy(f,true);try{let name,id=pid;
+        if(pid==='__new'){name=$('#rn').value.trim();const ex=S.products.find(p=>p.name.toLowerCase()===name.toLowerCase());
+          if(ex){id=ex.id;await S.db.doc('products/'+id).update({qty:(+ex.qty||0)+q,updatedAt:Date.now()})}
+          else{const ref=await S.db.collection('products').add({name,unit:$('#ru').value.trim()||'szt.',qty:q,note:'',createdAt:Date.now(),updatedAt:Date.now()});id=ref.id}}
+        else{const p=P(pid);name=p.name;await S.db.doc('products/'+pid).update({qty:(+p.qty||0)+q,updatedAt:Date.now()})}
+        await log({type:'in',productId:id,productName:name,qty:q,note});audit('Przyjęcie',`${name} +${fmtN(q)}${note?' ('+note+')':''}`);close();toast(`Przyjęto ${fmtN(q)} × ${name}`)}
+      catch(err){busy(f,false);$('#re').textContent=dbErr(err)}}});
+}
+function sheetProduct(id){const p=P(id);if(!p)return;const r=reserved(id);
+  sheet(`<h3>${esc(p.name)}</h3><div class="note">Na stanie ${fmtN(p.qty||0)} ${esc(p.unit||'szt.')}, zarezerwowane ${fmtN(r)}.</div>
+  ${S.ro?'':`<div class="field"><label for="pn">Nazwa</label><input id="pn" value="${esc(p.name)}"></div>
+  <div class="two"><div class="field"><label for="pq">Stan faktyczny</label><input id="pq" type="number" inputmode="decimal" step="any" value="${p.qty||0}"></div>
+  <div class="field"><label for="pu">Jednostka</label><input id="pu" value="${esc(p.unit||'szt.')}"></div></div>
+  <div class="field"><label for="pt">Notatka</label><input id="pt" value="${esc(p.note||'')}" placeholder="np. półka B3, numer seryjny"></div>
+  <div class="note">Zmiana stanu zapisze się w historii jako korekta.</div>`}
+  <div class="err" id="pe"></div>
+  <div class="actions">${S.ro?'':`<button type="button" class="btn ghost" id="pdel">Usuń pozycję</button><button type="button" class="btn" id="prec">+ Przyjęcie</button>`}<button type="button" class="btn" data-close>Zamknij</button>${S.ro?'':'<button class="btn primary">Zapisz</button>'}</div>`,f=>{
+    if(S.ro)return;
+    $('#prec').onclick=()=>{sheetReceive();$('#rp').value=id;$('#rp').onchange()};
+    $('#pdel').onclick=async()=>{const b=$('#pdel');
+      if(r>0)return $('#pe').textContent='Ta pozycja jest przypisana do firm. Najpierw usuń lub wydaj przypisania.';
+      if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='Na pewno usunąć?';b.classList.replace('ghost','out');return}
+      busy(f,true);try{await S.db.doc('products/'+id).delete();audit('Usunięcie pozycji',p.name);close();toast('Usunięto pozycję')}catch(e){busy(f,false);$('#pe').textContent=dbErr(e)}};
+    f.onsubmit=async e=>{e.preventDefault();const name=$('#pn').value.trim(),q=parseFloat($('#pq').value);
+      if(!name)return $('#pe').textContent='Nazwa nie może być pusta.';if(isNaN(q)||q<0)return $('#pe').textContent='Stan musi być liczbą 0 lub większą.';
+      busy(f,true);try{const diff=q-(+p.qty||0);
+        await S.db.doc('products/'+id).update({name,qty:q,unit:$('#pu').value.trim()||'szt.',note:$('#pt').value.trim(),updatedAt:Date.now()});
+        if(diff)await log({type:'adj',productId:id,productName:name,qty:diff,note:'Korekta stanu'});audit('Edycja pozycji',name+(diff?`, stan ${fmtN(p.qty||0)} → ${fmtN(q)}`:''));close();toast('Zapisano')}
+      catch(err){busy(f,false);$('#pe').textContent=dbErr(err)}}});
+}
+function sheetCompany(id){const c=id?C(id):null;
+  sheet(`<h3>${c?'Edytuj firmę':'Nowa firma'}</h3>
+  <div class="field"><label for="cn">Nazwa firmy</label><input id="cn" value="${esc(c?.name||'')}" placeholder="np. Kowalski Instalacje sp. z o.o."></div>
+  <div class="field"><label for="ct">Kontakt / adres (opcjonalnie)</label><input id="ct" value="${esc(c?.note||'')}" placeholder="np. ul. Mickiewicza 5, Katowice"></div>
+  <div class="err" id="ce"></div>
+  <div class="actions">${c?'<button type="button" class="btn ghost" id="cdel">Usuń firmę</button>':''}<button type="button" class="btn" data-close>Anuluj</button><button class="btn primary">Zapisz</button></div>`,f=>{
+    if(c)$('#cdel').onclick=async()=>{const b=$('#cdel');
+      if(S.allocs.some(a=>a.companyId===id&&a.status==='pending'))return $('#ce').textContent='Firma ma towar do wydania. Najpierw go wydaj lub usuń przypisania.';
+      if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='Na pewno usunąć?';b.classList.replace('ghost','out');return}
+      busy(f,true);try{await S.db.doc('companies/'+id).delete();audit('Usunięcie firmy',c.name);S.company=null;close();render();toast('Usunięto firmę (historia zostaje)')}catch(e){busy(f,false);$('#ce').textContent=dbErr(e)}};
+    f.onsubmit=async e=>{e.preventDefault();const name=$('#cn').value.trim();if(!name)return $('#ce').textContent='Wpisz nazwę firmy.';
+      busy(f,true);try{if(c)await S.db.doc('companies/'+id).update({name,note:$('#ct').value.trim()});
+        else{const ref=await S.db.collection('companies').add({name,note:$('#ct').value.trim(),createdAt:Date.now()});if(S.tab==='pick')S.pick.cid=ref.id;else S.company=ref.id}
+        audit(c?'Edycja firmy':'Nowa firma',name);close();render();toast('Zapisano firmę')}catch(err){busy(f,false);$('#ce').textContent=dbErr(err)}}});
+}
+function sheetAssign(){
+  if(!S.products.length){toast('Najpierw przyjmij coś na magazyn');return}
+  const cid=S.company;
+  sheet(`<h3>Przypisz towar</h3><div class="note">Dla: <b>${esc(C(cid)?.name)}</b>. Towar zostaje na stanie jako rezerwacja, dopóki nie oznaczysz go jako zawiezionego.</div>
+  <div class="field"><label for="ap">Rzecz z magazynu</label><select id="ap">${prodOptions(null)}</select></div>
+  <div class="field"><label for="aq">Ilość</label><input id="aq" type="number" inputmode="decimal" min="0" step="any" placeholder="0"></div>
+  <div class="note" id="aa"></div>
+  <div class="field"><label for="at">Notatka (opcjonalnie)</label><input id="at" placeholder="np. na budowę przy ul. Słonecznej"></div>
+  <div class="err" id="ae"></div>
+  <div class="actions"><button type="button" class="btn" data-close>Anuluj</button><button class="btn primary">Przypisz</button></div>`,f=>{
+    const info=()=>{const p=P($('#ap').value);if(!p)return;const av=(+p.qty||0)-reserved(p.id);$('#aa').textContent=`Wolne do przypisania: ${fmtN(av)} ${p.unit||'szt.'}`};$('#ap').onchange=info;info();
+    f.onsubmit=async e=>{e.preventDefault();const p=P($('#ap').value),q=parseFloat($('#aq').value);
+      if(!(q>0))return $('#ae').textContent='Podaj ilość większą od zera.';
+      const av=(+p.qty||0)-reserved(p.id);
+      if(q>av&&f.dataset.over!=='1'){f.dataset.over='1';return $('#ae').textContent=`Wolnych jest tylko ${fmtN(av)}. Kliknij „Przypisz” jeszcze raz, żeby zarezerwować mimo to.`}
+      busy(f,true);try{await S.db.collection('allocations').add({companyId:cid,productId:p.id,productName:p.name,qty:q,note:$('#at').value.trim(),status:'pending',createdAt:Date.now(),by:S.uid||null});
+        audit('Przypisanie do firmy',`${C(cid)?.name}: ${p.name} ×${fmtN(q)}`);close();toast(`Przypisano ${fmtN(q)} × ${p.name}`)}catch(err){busy(f,false);$('#ae').textContent=dbErr(err)}}});
+}
+function sheetDeliver(aid){const a=S.allocs.find(x=>x.id===aid);if(!a)return;const p=P(a.productId),c=C(a.companyId);
+  if(!p){toast('Ta pozycja nie istnieje już w magazynie');return}
+  sheet(`<h3>Potwierdź wydanie</h3>
+  <div class="field"><label for="dq">Ile zawieziono</label><input id="dq" type="number" inputmode="decimal" min="0" step="any" value="${a.qty}"></div>
+  <div class="confirm-box" id="dbx"></div>
+  <div class="field"><label for="dt">Uwagi (opcjonalnie)</label><input id="dt" placeholder="np. odebrał p. Nowak, WZ 45/10"></div>
+  <div class="err" id="de"></div>
+  <div class="actions"><button type="button" class="btn" data-close>Anuluj</button><button class="btn out">✓ Potwierdzam wydanie</button></div>`,f=>{
+    const upd=()=>{const q=parseFloat($('#dq').value)||0;$('#dbx').innerHTML=`<div class="line"><span>Firma</span><b>${esc(c?.name)}</b></div><div class="line"><span>Rzecz</span><b>${esc(p.name)}</b></div>
+      <div class="line"><span>Stan magazynu</span><b class="mono">${fmtN(p.qty||0)} → ${fmtN((+p.qty||0)-q)} ${esc(p.unit||'szt.')}</b></div>
+      ${q<a.qty&&q>0?`<div class="line"><span>Zostanie do wydania</span><b class="mono">${fmtN(a.qty-q)}</b></div>`:''}`};$('#dq').oninput=upd;upd();
+    f.onsubmit=async e=>{e.preventDefault();const q=parseFloat($('#dq').value);
+      if(!(q>0))return $('#de').textContent='Podaj ilość większą od zera.';if(q>a.qty)return $('#de').textContent=`Przypisano tylko ${fmtN(a.qty)}. Przypisz więcej, jeśli zawiozłeś więcej.`;
+      busy(f,true);try{
+        await S.db.doc('products/'+p.id).update({qty:(+p.qty||0)-q,updatedAt:Date.now()});
+        if(q<a.qty)await S.db.doc('allocations/'+a.id).update({qty:a.qty-q});
+        else await S.db.doc('allocations/'+a.id).update({status:'delivered',deliveredAt:Date.now(),mark:null});
+        await log({type:'out',productId:p.id,productName:p.name,qty:q,companyId:a.companyId,companyName:c?.name||'',note:$('#dt').value.trim()||a.note||''});
+        audit('Wydanie',`${c?.name}: ${p.name} ×${fmtN(q)}`);close();toast(`Wydano ${fmtN(q)} × ${p.name}`)}catch(err){busy(f,false);$('#de').textContent=dbErr(err)}}});
+}
+async function markAlloc(aid,v){const a=S.allocs.find(x=>x.id===aid);if(!a)return;
+  try{await S.db.doc('allocations/'+aid).update({mark:a.mark===v?null:v})}catch(e){toast(dbErr(e))}}
+function sheetConfirmTicks(){const cid=S.company,c=C(cid);
+  const list=S.allocs.filter(a=>a.companyId===cid&&a.status==='pending'&&a.mark==='ok');if(!list.length)return;
+  const totals={};list.forEach(a=>totals[a.productId]=(totals[a.productId]||0)+(+a.qty||0));
+  const missing=list.filter(a=>!P(a.productId));
+  const lines=list.map(a=>{const p=P(a.productId);return `<div class="line"><span>${esc(p?.name||a.productName)}</span><b class="mono">${fmtN(a.qty)} ${esc(p?.unit||'szt.')}</b></div>`}).join('');
+  const stock=Object.entries(totals).map(([pid,t])=>{const p=P(pid);return p?`<div class="line"><span>${esc(p.name)}</span><b class="mono">${fmtN(p.qty||0)} → ${fmtN((+p.qty||0)-t)}</b></div>`:''}).join('');
+  const no=S.allocs.filter(a=>a.companyId===cid&&a.status==='pending'&&a.mark==='no').length;
+  sheet(`<h3>Zatwierdź dostawę</h3><div class="note">Dla: <b>${esc(c?.name)}</b></div>
+  <div class="confirm-box"><div class="note">Zawiezione ✓</div>${lines}</div>
+  <div class="confirm-box"><div class="note">Stan magazynu po wydaniu</div>${stock}</div>
+  ${no?`<div class="note">${no} poz. oznaczonych ✕ zostanie na liście do wydania.</div>`:''}
+  ${missing.length?'<div class="err">Część odhaczonych rzeczy usunięto z magazynu – zostaną pominięte.</div>':''}
+  <div class="field"><label for="kt">Uwagi do dostawy (opcjonalnie)</label><input id="kt" placeholder="np. odebrał p. Nowak, WZ 45/10"></div>
+  <div class="err" id="ke"></div>
+  <div class="actions"><button type="button" class="btn" data-close>Anuluj</button><button class="btn in">✓ Zatwierdź i zdejmij ze stanu</button></div>`,f=>{
+    f.onsubmit=async e=>{e.preventDefault();busy(f,true);const note=$('#kt').value.trim();let done=0;
+      try{for(const [pid,t] of Object.entries(totals)){const p=P(pid);if(p)await S.db.doc('products/'+pid).update({qty:(+p.qty||0)-t,updatedAt:Date.now()})}
+        for(const a of list){const p=P(a.productId);if(!p)continue;
+          await S.db.doc('allocations/'+a.id).update({status:'delivered',deliveredAt:Date.now(),mark:null});
+          await log({type:'out',productId:p.id,productName:p.name,qty:+a.qty,companyId:cid,companyName:c?.name||'',note:note||a.note||''});done++}
+        audit('Zatwierdzenie dostawy',`${c?.name}: `+list.map(a=>`${P(a.productId)?.name||a.productName} ×${fmtN(a.qty)}`).join(', '));close();toast(`Zatwierdzono dostawę: ${done} poz.`)}
+      catch(err){busy(f,false);$('#ke').textContent=dbErr(err)}}});
+}
+async function removeAlloc(aid,btn){
+  if(btn.dataset.sure!=='1'){btn.dataset.sure='1';btn.textContent='Na pewno?';return}
+  const a=S.allocs.find(x=>x.id===aid);try{await S.db.doc('allocations/'+aid).delete();audit('Usunięcie przypisania',a?`${C(a.companyId)?.name||'?'}: ${a.productName} ×${fmtN(a.qty)}`:'');toast('Usunięto przypisanie')}catch(e){toast(dbErr(e))}
+}
+
+/* ---------- events ---------- */
+document.querySelector('nav').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.tab=b.dataset.tab;if(S.tab!=='companies')S.company=null;else if(b.getAttribute('aria-selected')==='true')S.company=null;render();scrollTo(0,0)};
+$('#pickgo').onclick=()=>submitPick();
+$('#tickgo').onclick=()=>sheetConfirmTicks();
+$('#fab').onclick=()=>{if(S.tab==='stock')sheetReceive();else if(S.tab==='companies')S.company?sheetAssign():sheetCompany()};
+$('#main').addEventListener('click',e=>{const t=e.target.closest('[data-act]');if(!t)return;const id=t.dataset.id;
+  ({editProduct:()=>sheetProduct(id),openCompany:()=>{S.company=id;render();scrollTo(0,0)},back:()=>{S.company=null;render()},
+    editCompany:()=>sheetCompany(id),ptoggle:()=>pToggle(id),pstep:()=>pStep(id,+t.dataset.v),newCompanyPick:()=>sheetCompany(),goCompany:()=>{S.tab='companies';S.company=id;render();scrollTo(0,0)},clearPick:()=>{S.pick.sel={};render()},mark:()=>markAlloc(id,t.dataset.v),deliver:()=>sheetDeliver(id),removeAlloc:()=>removeAlloc(id,t),hf:()=>{S.hFilter=id;render()}})[t.dataset.act]?.()});
+$('#main').addEventListener('change',e=>{if(e.target.id==='pc'){S.pick.cid=e.target.value;render()}});
+$('#main').addEventListener('input',e=>{if(e.target.classList.contains('pqty')){const v=parseFloat(e.target.value.replace(',','.'));S.pick.sel[e.target.dataset.id]=v>0?v:0;updatePickbar();return}if(e.target.id==='q'){S.q=e.target.value;const pos=e.target.selectionStart;render();const q=$('#q');q.focus();q.setSelectionRange(pos,pos)}});
+
+/* ---------- data ---------- */
+let rT;const rerender=()=>{clearTimeout(rT);rT=setTimeout(()=>{if(!$('#sheetRoot').firstChild||true)render()},30)};
+function sub(col,key,q){unsubs.push((q||S.db.collection(col)).onSnapshot(s=>{S[key]=s.docs.map(d=>({id:d.id,...d.data()}));if(key==='history')resolveNames();rerender()},e=>{if(e&&e.code==='permission-denied')toast('Brak dostępu do bazy. Sprawdź reguły Firestore.')}))}
+async function resolveNames(){if(!S.user)return;const ids=[...new Set(S.history.map(h=>h.by).filter(Boolean))].filter(id=>!(id in S.names));if(!ids.length)return;
+  try{const ps=await S.user.profiles(ids);ids.forEach(id=>S.names[id]=ps?.[id]?.name||'');rerender()}catch(e){}}
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut,sendPasswordResetEmail,updatePassword} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {initializeFirestore,persistentLocalCache,collection,doc,addDoc,updateDoc,deleteDoc,getDoc,getDocs,setDoc,onSnapshot,query,orderBy,limit} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+/* ====== KONFIGURACJA FIREBASE (Ustawienia projektu → Twoje aplikacje) ====== */
+const firebaseConfig = {
+  apiKey: "AIzaSyBJmtHauplgWgbUwYePz0ehT3aQhMTmEq0",
+  authDomain: "magazyn-f870c.firebaseapp.com",
+  projectId: "magazyn-f870c",
+  storageBucket: "magazyn-f870c.firebasestorage.app",
+  messagingSenderId: "212619706820",
+  appId: "1:212619706820:web:ec1cdb42c2f0aee0462491"
+};
+/* ========================================================================== */
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const fdb=initializeFirestore(app,{localCache:persistentLocalCache()});
+const wrapQ=q=>({
+  onSnapshot:(next,err)=>onSnapshot(q,snap=>next({docs:snap.docs.map(d=>({id:d.id,data:()=>d.data()}))}),e=>{err&&err(e)}),
+  orderBy:(f,d)=>wrapQ(query(q,orderBy(f,d||'asc'))),
+  limit:n=>wrapQ(query(q,limit(n))),
+  get:async()=>{const sn=await getDocs(q);return {docs:sn.docs.map(d=>({id:d.id,data:()=>d.data()}))}}});
+const FS={
+  collection(p){const ref=collection(fdb,p);return Object.assign(wrapQ(ref),{add:async d=>{const r=await addDoc(ref,d);return {id:r.id}}})},
+  doc(p){const r=doc(fdb,p);return {update:d=>updateDoc(r,d),delete:()=>deleteDoc(r)}}
+};
+let unsubs=[];
+function audit(action,details){try{addDoc(collection(fdb,'audit'),{at:Date.now(),by:auth.currentUser?.email||'',action,details:String(details||'').slice(0,500)}).catch(()=>{})}catch(e){}}
+async function sheetAudit(){
+  sheet(`<h3>Dziennik zmian</h3><div class="note">Kto, kiedy i co zmienił w magazynie. Ostatnie 300 wpisów.</div>
+  <div class="field" id="aufw" hidden><label for="auf">Osoba</label><select id="auf"></select></div>
+  <div class="list" id="aul"><div class="empty">Wczytywanie…</div></div>
+  <div class="actions"><button type="button" class="btn" data-close>Zamknij</button></div>`,async f=>{f.onsubmit=e=>e.preventDefault();
+    let rows=[];
+    try{const sn=await FS.collection('audit').orderBy('at','desc').limit(300).get();rows=sn.docs.map(d=>d.data())}
+    catch(e){$('#aul').innerHTML='<div class="empty">Nie udało się wczytać dziennika. Sprawdź połączenie.</div>';return}
+    if(!$('#aul'))return;
+    const people=[...new Set(rows.map(r=>r.by).filter(Boolean))].sort();
+    if(people.length>1){$('#aufw').hidden=false;$('#auf').innerHTML='<option value="">Wszyscy</option>'+people.map(x=>`<option>${esc(x)}</option>`).join('')}
+    const draw=()=>{const who=$('#auf').value;const list=rows.filter(r=>!who||r.by===who);
+      $('#aul').innerHTML=list.map(r=>`<div class="row"><div class="name">${esc(r.action)}</div><div class="note mono" style="font-size:12px">${fmtD(r.at)}</div>
+        <div class="sub">${r.details?`<span>${esc(r.details)}</span>`:''}<span><b>${esc(r.by||'?')}</b></span></div></div>`).join('')||'<div class="empty"><strong>Brak wpisów</strong>Każda zmiana w magazynie zapisze się tutaj z nazwą osoby.</div>'};
+    $('#auf').onchange=draw;draw()});
+}
+const lf=$('#lf');
+lf.onsubmit=async e=>{e.preventDefault();$('#lerr').textContent='';$('#lgo').disabled=true;
+  try{await signInWithEmailAndPassword(auth,$('#le').value.trim(),$('#lp').value)}
+  catch(err){$('#lerr').textContent=['auth/invalid-credential','auth/wrong-password','auth/user-not-found','auth/invalid-email'].includes(err.code)?'Nieprawidłowy e-mail lub hasło.':err.code==='auth/too-many-requests'?'Za dużo prób. Spróbuj za kilka minut.':'Nie udało się zalogować. Sprawdź połączenie.'}
+  $('#lgo').disabled=false};
+$('#lreset').onclick=async()=>{const em=$('#le').value.trim();if(!em){$('#lerr').textContent='Wpisz swój e-mail, a wyślemy link do zmiany hasła.';return}
+  try{await sendPasswordResetEmail(auth,em);$('#lerr').textContent='Jeśli to konto istnieje, link do zmiany hasła jest już w skrzynce.'}catch(e){$('#lerr').textContent='Nie udało się wysłać linku. Sprawdź adres e-mail.'}};
+function startApp(u){
+  $('#pwd').hidden=true;
+  S.db=FS;S.uid=u.email||u.uid;S.ro=false;
+  $('#who').innerHTML='';$('#who').append(document.createTextNode(u.email||'Zalogowano'));
+  const b=document.createElement('button');b.textContent='Wyloguj';b.onclick=()=>signOut(auth);$('#who').append(b);
+  sub('products','products');sub('companies','companies');sub('allocations','allocs');
+  sub('history','history',FS.collection('history').orderBy('at','desc').limit(500));
+  render();
+}
+let pwdUser=null;
+$('#auditBtn').onclick=()=>sheetAudit();
+$('#pout').onclick=()=>signOut(auth);
+$('#pf').onsubmit=async e=>{e.preventDefault();const p1=$('#p1').value,p2=$('#p2').value,er=$('#perr');er.textContent='';
+  if(p1.length<8)return er.textContent='Hasło musi mieć co najmniej 8 znaków.';
+  if(p1!==p2)return er.textContent='Hasła nie są takie same.';
+  $('#pgo').disabled=true;
+  try{await updatePassword(pwdUser,p1);
+    await setDoc(doc(fdb,'userState/'+pwdUser.uid),{passwordChanged:true,changedAt:Date.now(),email:pwdUser.email||''});
+    $('#p1').value='';$('#p2').value='';audit('Ustawienie własnego hasła','');toast('Hasło zmienione');startApp(pwdUser)}
+  catch(err){er.textContent=err.code==='auth/requires-recent-login'?'Ze względów bezpieczeństwa zaloguj się jeszcze raz i od razu ustaw hasło.':
+    (err.code==='auth/weak-password'||err.code==='auth/password-does-not-meet-requirements')?'To hasło jest za słabe. Użyj dłuższego, z cyframi i literami.':'Nie udało się zmienić hasła. Sprawdź połączenie i spróbuj ponownie.';
+    if(err.code==='auth/requires-recent-login')setTimeout(()=>signOut(auth),2500)}
+  $('#pgo').disabled=false};
+onAuthStateChanged(auth,async u=>{
+  unsubs.forEach(f=>f());unsubs=[];
+  if(!u){S.db=null;$('#pwd').hidden=true;$('#login').hidden=false;$('#who').textContent='';render();return}
+  $('#login').hidden=true;$('#lp').value='';
+  let changed=false;
+  try{const d=await getDoc(doc(fdb,'userState/'+u.uid));changed=d.exists()&&d.data().passwordChanged===true}catch(e){changed=false}
+  if(auth.currentUser!==u)return;
+  if(!changed){pwdUser=u;$('#pwd').hidden=false;$('#p1').focus();return}
+  startApp(u);
+});
+</script>
+</body></html>
